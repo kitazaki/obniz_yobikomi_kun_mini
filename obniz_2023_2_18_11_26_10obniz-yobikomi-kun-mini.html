@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/css/starter-sample.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script
+      src="https://unpkg.com/obniz@3.21.0/obniz.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="obniz-debug"></div>
+
+    <div class="wrap">
+      <div class="led">
+        <h3 class="text-center">Turning on a LED</h3>
+        <button class="btn btn-primary" id="on">LED ON</button>
+        <button class="btn btn-outline-primary" id="off">LED OFF</button>
+      </div>
+    </div>
+
+    <script>
+      var obniz = new Obniz("XXXX-XXXX");
+      obniz.onconnect = async function() {
+        obniz.display.clear();
+        //obniz.display.print(state);
+
+        obniz.switch.onchange = function(state) {
+          $("#print").text(state);
+          obniz.display.clear();
+          obniz.display.print(state);
+        };
+
+        $("#on").click(function() {
+          obniz.io0.output(false);
+          //obniz.io1.drive("3v");
+          obniz.io1.output(true);
+          obniz.display.clear();
+          obniz.display.print("ON");
+        });
+
+        $("#off").click(function() {
+          obniz.io0.end();
+          obniz.io1.end();
+          obniz.display.clear();
+          obniz.display.print("OFF");
+        });
+      };
+    </script>
+  </body>
+</html>

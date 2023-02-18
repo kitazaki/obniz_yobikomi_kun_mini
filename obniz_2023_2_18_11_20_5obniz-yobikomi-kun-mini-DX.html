@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="/css/starter-sample.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script
+      src="https://unpkg.com/obniz@3.25.0/obniz.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="obniz-debug"></div>
+
+    <div class="wrap">
+      <div class="led">
+        <h3 class="text-center">Turning on 呼び込み君ミニDX</h3>
+        <button class="btn btn-primary" id="on1">ON(アップテンポ調)</button>
+        <button class="btn btn-primary" id="on2">ON(ボサノバ調)</button>
+        <br><br>
+        <button class="btn btn-outline-primary" id="off">OFF</button>
+      </div>
+    </div>
+
+    <script>
+      var obniz = new Obniz("XXXX-XXXX");
+      obniz.onconnect = async function() {
+        obniz.display.clear();
+        //obniz.display.print(state);
+
+        obniz.switch.onchange = function(state) {
+          $("#print").text(state);
+          obniz.display.clear();
+          obniz.display.print(state);
+        };
+
+        $("#on1").click(function() {
+          obniz.io0.output(false);  // GND
+          // obniz.io1.drive("3v");  // VCC(3Vはエラー表示)
+          obniz.io1.output(true);
+          obniz.io3.pull("0v");  // 曲選択(ON:No.4, OFF:No.2)
+          obniz.wait(100);
+          obniz.io2.pull("5v")
+          obniz.wait(100);
+          obniz.io2.pull("0v")
+          obniz.display.clear();
+          obniz.display.print("ON");
+        });
+
+        $("#on2").click(function() {
+          obniz.io0.output(false);  // GND
+          // obniz.io1.drive("3v");  // VCC(3Vはエラー表示)
+          obniz.io1.output(true);
+          obniz.io3.pull("5v");  // 曲選択(ON:No.4, OFF:No.2)
+          obniz.wait(100);
+          obniz.io2.pull("5v");
+          obniz.wait(100);
+          obniz.io2.pull("0v");
+          obniz.display.clear();
+          obniz.display.print("ON");
+        });
+
+        $("#off").click(function() {
+          obniz.io0.end();
+          obniz.io1.end();
+          obniz.io2.end();
+          obniz.io3.end();
+          obniz.display.clear();
+          obniz.display.print("OFF");
+        });
+      };
+    </script>
+  </body>
+</html>
